@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+  db:
+    image: postgres
+    container_name: local_pgdb
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+    volumes:
+      - type: volume
+        source: local_pgdata
+        target: /var/lib/postgresql/data
+        volume:
+          nocopy: true
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - '8888:80'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    volumes:
+      - type: volume
+        source: pgadmin-data
+        target: /var/lib/pgadmin
+        volume:
+          nocopy: true
+
+volumes:
+  local_pgdata:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/Users/prashantsingh/Desktop/Personal/DB/pgdata' # Change this path to your local path
+  pgadmin-data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/Users/prashantsingh/Desktop/Personal/DB/pgadmin' # Change this path to your local path
