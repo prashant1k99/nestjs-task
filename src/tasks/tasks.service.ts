@@ -23,6 +23,23 @@ export class TasksService {
     return this.tasks;
   }
 
+  findAllWithFilters(filterDto): Task[] {
+    const { status, search } = filterDto;
+    let tasks = this.findAll();
+
+    if (status) {
+      tasks = tasks.filter((task) => task.status === status);
+    }
+
+    if (search) {
+      tasks = tasks.filter((task) => {
+        return task.title.includes(search) || task.description.includes(search);
+      });
+    }
+
+    return tasks;
+  }
+
   findOne(id: number): Task {
     const task = this.tasks.find((task) => task.id === id);
     if (!task) {
@@ -35,7 +52,15 @@ export class TasksService {
   update(id: number, updateTaskDto: UpdateTaskDto): Task {
     const task = this.findOne(id);
 
-    task.status = updateTaskDto.status as TaskStatus;
+    if (updateTaskDto.title) {
+      task.title = updateTaskDto.title;
+    }
+    if (updateTaskDto.description) {
+      task.description = updateTaskDto.description;
+    }
+    if (updateTaskDto.status) {
+      task.status = updateTaskDto.status as TaskStatus;
+    }
 
     return task;
   }

@@ -7,10 +7,12 @@ import {
   Param,
   Delete,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { GetTaskFilterDto } from './dto/get-task-filter.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -21,9 +23,11 @@ export class TasksController {
     return this.tasksService.create(createTaskDto);
   }
 
-  // Add filter to the findAll method
   @Get()
-  findAll() {
+  findAll(@Query(ValidationPipe) GetTaskFilter: GetTaskFilterDto) {
+    if (Object.keys(GetTaskFilter).length) {
+      return this.tasksService.findAllWithFilters(GetTaskFilter);
+    }
     return this.tasksService.findAll();
   }
 
