@@ -1,12 +1,17 @@
-export enum TaskStatus {
-  OPEN = 'OPEN',
-  IN_PROGRESS = 'IN_PROGRESS',
-  DONE = 'DONE',
-}
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { TaskStatus } from './task-status.enum';
 
-export class Task {
+@Entity()
+export class Task extends BaseEntity {
+  @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
   title: string;
+
+  @Column()
   description: string;
+
+  @Column()
   status: TaskStatus;
 }
